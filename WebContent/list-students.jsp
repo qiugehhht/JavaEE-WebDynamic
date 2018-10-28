@@ -12,21 +12,33 @@
 </div>
 </div>
 <div id="container">
+</div>
 <div id="content">
+<form action="AddStudentServlet" method="get">
+<input type="submit" value="Add Student"/>
+</form>
+</div>
+</body>
+</html>
 <table>
 <tr>
 <th>First Name </th>
 <th>Last Name</th>
 <th>Email </th>
+<th>Action</th>
 </tr>
 <c:forEach var="tempStudent" items="${STUDENT_LIST }" >
+<c:url var="EditLink" value= "EditStudentServlet">
+<c:param name="studentId" value="${tempStudent.id}"/>
+</c:url>
+<c:url var="DeleteLink" value= "DeleteStudentServlet">
+<c:param name="studentId" value="${tempStudent.id}"/>
+</c:url>
 <tr>
 <td> ${tempStudent.first_Name}</td>
 <td> ${tempStudent.last_Name}</td>
 <td> ${tempStudent.email}</td>
+<td> <a href="${EditLink }"> Edit</a>|<a href="${DeleteLink }">Delete</a></td>
+</tr>
 </c:forEach>
 </table>
-</div>
-</div>
-</body>
-</html>

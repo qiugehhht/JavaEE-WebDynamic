@@ -44,5 +44,19 @@ import javax.sql.DataSource;
 	RequestDispatcher dispatcher = request.getRequestDispatcher("/list-students.jsp");
 	dispatcher.forward(request, response);
 	}
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws
+	ServletException, IOException {
+	String fn= req.getParameter("firstName");
+	String ln= req.getParameter("lastName");
+	String email = req.getParameter("email");
+	Student student = new Student(fn,ln,email);
+	studentDbUtil.addStudent(student);
+	try {
+	listStudents(req,resp);
+	} catch (Exception e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	}
+	}
 }
 

@@ -1,6 +1,7 @@
 package com.qiuge.web.jdbc;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -48,4 +49,86 @@ public class StudentDBUtil {
 		System.out.println(e.getMessage());
 		}
 		}
+		public void addStudent(Student student){
+			// TODO Auto-generated method stub
+			Connection myConn=null;
+			PreparedStatement myStmt = null;
+			ResultSet myRs= null;
+			try {
+			myConn = dataSource.getConnection();
+			String sql = "INSERT INTO Student (first_name, last_name, email)VALUES (?, ?, ?)";
+			myStmt = myConn.prepareStatement(sql);
+			String firstName = student.getFirst_Name();
+			String lastName = student.getLast_Name();
+			String email = student.getEmail();
+			myStmt.setString(1, firstName);
+			myStmt.setString(2, lastName);
+			myStmt.setString(3, email);
+			myStmt.execute();
+			}
+			catch(Exception e){
+			System.out.println(e.getMessage());
+			}
+			finally{
+			close(myConn,myStmt,myRs);
+			}
+			
+			
+		}
+		public Student fetchStudent(int id) {
+			Connection myConn=null;
+			Statement myStmt = null;
+			ResultSet myRs= null;
+			Student student=null;
+			try {
+			myConn = dataSource.getConnection();
+			myStmt= myConn.createStatement();
+			String sql= "select * from student where id="+id;
+			myRs = myStmt.executeQuery(sql);
+			while(myRs.next()){
+			String firstName=myRs.getString("first_name");
+			String lastName=myRs.getString("last_name");
+			String email = myRs.getString("email");
+			student = new Student(id,firstName,lastName,email);
+			}
+			return student;
+			}catch(Exception e){
+			System.out.println(e.getMessage());
+			return null;
+			} finally{
+			close(myConn,myStmt,myRs);
+			}
+			}
+		public void updateStudent(Student student) {
+			Connection myConn=null;
+			PreparedStatement myStmt = null;
+			try {
+			myConn = dataSource.getConnection();
+			String sql = "update student set first_name=?, last_name=?,email=? where id=?";
+			myStmt = myConn.prepareStatement(sql);
+			myStmt.setString(1, student.getFirst_Name());
+			myStmt.setString(2, student.getLast_Name());
+			myStmt.setString(3, student.getEmail());
+			myStmt.setInt(4,student.getId());
+			myStmt.execute();
+			}
+			catch(Exception e){
+			System.out.println(e.getMessage());
+			}
+			finally{
+			close(myConn,myStmt,null);
+			}
+			}
+		public void deleteStudent(int id) {
+			// TODO Auto-generated method stub
+			Connection myConn=null;
+			Statement myStmt = null;
+			try {
+			myConn = dataSource.getConnection();
+			myStmt= myConn.createStatement();
+			String sql= "delete from student where id="+id;
+			myStmt.execute(sql);
+			}catch(Exception e){
+			System.out.println(e.getMessage());
+			} finally{ close(myConn,myStmt,null); }}
 }
